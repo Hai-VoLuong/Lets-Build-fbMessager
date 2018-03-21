@@ -8,9 +8,36 @@
 
 import UIKit
 
+class Friend {
+    var name: String?
+    var profileImageName: String?
+}
+
+class Message {
+    var text: String?
+    var date: Date?
+    
+    var friend: Friend?
+}
+
 class ViewController: UIViewController {
 
     private let cellId = "Cell"
+    
+    var messages: [Message]?
+    
+    private func setupData() {
+        let mark = Friend()
+        mark.name = "Mark Zukerberg"
+        mark.profileImageName = "zurkerberg"
+        
+        let message = Message()
+        message.friend = mark
+        message.text = "Hello, my name is Mark. Nice to meet you..."
+        message.date = Date()
+        
+        messages = [message]
+    }
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -21,25 +48,31 @@ class ViewController: UIViewController {
         collectionView.delegate = self
         return collectionView
     }()
-    // ep1: 8:30
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"
-        
+
         view.addSubview(collectionView)
-        collectionView.register(FriendCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(MessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .zero)
+        
+        setupData()
     }
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        if let count = messages?.count {
+            return count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MessageCell
+        cell.message = messages?[indexPath.item]
         return cell
     }
     
@@ -48,9 +81,27 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     }
 }
 
-class FriendCell: BaseCell {
+class MessageCell: BaseCell {
     
-    let profileImage: UIImageView = {
+    var message: Message? {
+        didSet {
+            if let name = message?.friend?.name,
+               let profileImage = message?.friend?.profileImageName,
+               let messageText = message?.text,
+               let date = message?.date {
+                
+                nameLabel.text = name
+                profileImageView.image = UIImage(named: profileImage)
+                messageLabel.text = messageText
+                
+                let dateFormater = DateFormatter()
+                dateFormater.dateFormat = "hh:mm a"
+                timeLabel.text = dateFormater.string(from: date)
+            }
+        }
+    }
+    
+    let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = #imageLiteral(resourceName: "zurkerberg")
         iv.contentMode = .scaleAspectFill
@@ -103,13 +154,13 @@ class FriendCell: BaseCell {
     }()
     
     override func setupViews() {
-        addSubview(profileImage)
+        addSubview(profileImageView)
         addSubview(dividerLineView)
         setupContainerView()
         
-        profileImage.anchor(top: nil, leading: centerXAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 68, height: 68))
-        profileImage.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
+        profileImageView.anchor(top: nil, leading: centerXAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 68, height: 68))
+        profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
         
         dividerLineView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 82, bottom: 0, right: 0), size: .init(width: 0, height: 1))
     }
@@ -121,7 +172,7 @@ class FriendCell: BaseCell {
         containView.addSubview(timeLabel)
         containView.addSubview(hasRedImageView)
         
-        containView.anchor(top: profileImage.topAnchor, leading: profileImage.trailingAnchor, bottom: profileImage.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 5, bottom: 0, right: 0), size: .init(width: 0, height: 0))
+        containView.anchor(top: profileImageView.topAnchor, leading: profileImageView.trailingAnchor, bottom: profileImageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 5, bottom: 0, right: 0), size: .init(width: 0, height: 0))
         
         nameLabel.anchor(top: containView.topAnchor, leading: containView.leadingAnchor, bottom: nil, trailing: timeLabel.leadingAnchor, padding: .init(top: 4, left: 4, bottom: 0, right: 0), size: .init(width: 0, height: 20))
         
