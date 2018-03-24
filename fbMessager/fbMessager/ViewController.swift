@@ -31,14 +31,23 @@ class ViewController: UIViewController {
         mark.name = "Mark Zukerberg"
         mark.profileImageName = "zurkerberg"
         
-        let message = Message()
-        message.friend = mark
-        message.text = "Hello, my name is Mark. Nice to meet you..."
-        message.date = Date()
+        let messageMark = Message()
+        messageMark.friend = mark
+        messageMark.text = "Hello, my name is Mark. Nice to meet you..."
+        messageMark.date = Date()
         
-        messages = [message]
+        let steve = Friend()
+        mark.name = "Steve job"
+        mark.profileImageName = "stevejob"
+        
+        let messageSteve = Message()
+        messageSteve.friend = steve
+        messageSteve.text = "Apple creates great IOS for the world..."
+        messageSteve.date = Date()
+        
+        messages = [messageMark, messageSteve]
     }
-    
+    // ep2 9:28
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
