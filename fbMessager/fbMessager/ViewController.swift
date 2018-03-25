@@ -7,18 +7,7 @@
 //
 
 import UIKit
-
-class Friend {
-    var name: String?
-    var profileImageName: String?
-}
-
-class Message {
-    var text: String?
-    var date: Date?
-    
-    var friend: Friend?
-}
+import CoreData
 
 class ViewController: UIViewController {
 
@@ -26,26 +15,73 @@ class ViewController: UIViewController {
     
     var messages: [Message]?
     
+    private func clearData() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        if let context = delegate?.persistentContainer.viewContext {
+            do {
+                let entityNames = ["Friend", "Message"]
+                
+                for entityName in entityNames {
+                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+                    let objects = try context.fetch(fetchRequest)
+                    
+                    for object in objects {
+                        context.delete(object)
+                    }
+                }
+                try context.save()
+            } catch let err {
+                print(err)
+            }
+        }
+    }
+    
     private func setupData() {
-        let mark = Friend()
-        mark.name = "Mark Zukerberg"
-        mark.profileImageName = "zurkerberg"
         
-        let messageMark = Message()
-        messageMark.friend = mark
-        messageMark.text = "Hello, my name is Mark. Nice to meet you..."
-        messageMark.date = Date()
+        clearData()
         
-        let steve = Friend()
-        mark.name = "Steve job"
-        mark.profileImageName = "stevejob"
+        let delegate = UIApplication.shared.delegate as? AppDelegate
         
-        let messageSteve = Message()
-        messageSteve.friend = steve
-        messageSteve.text = "Apple creates great IOS for the world..."
-        messageSteve.date = Date()
+        if let context = delegate?.persistentContainer.viewContext {
+            let mark = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            mark.name = "Mark Zukerberg"
+            mark.profileImageName = "zurkerberg"
+            
+            let messageMark = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+            messageMark.friend = mark
+            messageMark.text = "Hello, my name is Mark. Nice to meet you..."
+            messageMark.date = Date() as NSDate
+            
+            let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            steve.name = "Steve job"
+            steve.profileImageName = "stevejob"
+            
+            let messageSteve = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+            messageSteve.friend = steve
+            messageSteve.text = "Apple creates great IOS for the world..."
+            messageSteve.date = Date() as NSDate
+            
+            do {
+                try context.save()
+            } catch let err {
+                print(err)
+            }
+        }
         
-        messages = [messageMark, messageSteve]
+        loadData()
+    }
+    
+    private func loadData() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        if let context = delegate?.persistentContainer.viewContext {
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Message")
+            
+            do {
+                messages = try context.fetch(fetchRequest) as? [Message]
+            } catch let err {
+                print(err)
+            }
+        }
     }
     // ep2 9:28
     lazy var collectionView: UICollectionView = {
@@ -101,11 +137,12 @@ class MessageCell: BaseCell {
                 
                 nameLabel.text = name
                 profileImageView.image = UIImage(named: profileImage)
+                hasRedImageView.image = UIImage(named: profileImage)
                 messageLabel.text = messageText
                 
                 let dateFormater = DateFormatter()
                 dateFormater.dateFormat = "hh:mm a"
-                timeLabel.text = dateFormater.string(from: date)
+                timeLabel.text = dateFormater.string(from: date as Date)
             }
         }
     }

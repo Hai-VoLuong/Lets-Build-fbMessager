@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04122E432067A971005AB5B9 /* Message+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */; };
+		04122E442067A971005AB5B9 /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */; };
+		04122E452067A971005AB5B9 /* Friend+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */; };
+		04122E462067A971005AB5B9 /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */; };
 		049DFDB6205ACEDB00C6DF73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */; };
 		049DFDB8205ACEDB00C6DF73 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDB7205ACEDB00C6DF73 /* ViewController.swift */; };
 		049DFDBE205ACEDB00C6DF73 /* fbMessager.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDBC205ACEDB00C6DF73 /* fbMessager.xcdatamodeld */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataClass.swift"; sourceTree = "<group>"; };
+		04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataClass.swift"; sourceTree = "<group>"; };
+		04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		049DFDB2205ACEDB00C6DF73 /* fbMessager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fbMessager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		049DFDB7205ACEDB00C6DF73 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +64,10 @@
 		049DFDB4205ACEDB00C6DF73 /* fbMessager */ = {
 			isa = PBXGroup;
 			children = (
+				04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */,
+				04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */,
+				04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */,
+				04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */,
 				049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */,
 				049DFDB7205ACEDB00C6DF73 /* ViewController.swift */,
 				049DFDBF205ACEDB00C6DF73 /* Assets.xcassets */,
@@ -140,8 +152,12 @@
 			files = (
 				049DFDB8205ACEDB00C6DF73 /* ViewController.swift in Sources */,
 				049DFDB6205ACEDB00C6DF73 /* AppDelegate.swift in Sources */,
+				04122E442067A971005AB5B9 /* Message+CoreDataProperties.swift in Sources */,
 				049DFDCB205B3A3E00C6DF73 /* UIViews+Extensions.swift in Sources */,
 				049DFDBE205ACEDB00C6DF73 /* fbMessager.xcdatamodeld in Sources */,
+				04122E462067A971005AB5B9 /* Friend+CoreDataProperties.swift in Sources */,
+				04122E452067A971005AB5B9 /* Friend+CoreDataClass.swift in Sources */,
+				04122E432067A971005AB5B9 /* Message+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
