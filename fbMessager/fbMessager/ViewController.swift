@@ -82,6 +82,9 @@ class ViewController: UIViewController {
         let delegate = UIApplication.shared.delegate as? AppDelegate
         if let context = delegate?.persistentContainer.viewContext {
             let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Message")
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            fetchRequest.predicate = NSPredicate(format: "friend.name = %@", "Steve jobs")
+            fetchRequest.fetchLimit = 1
             
             do {
                 messages = try context.fetch(fetchRequest) as? [Message]
