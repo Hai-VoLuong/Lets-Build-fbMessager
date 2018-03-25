@@ -7,11 +7,83 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
 
     private let cellId = "Cell"
     
+    var messages: [Message]?
+    
+    private func clearData() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        if let context = delegate?.persistentContainer.viewContext {
+            do {
+                let entityNames = ["Friend", "Message"]
+                
+                for entityName in entityNames {
+                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+                    let objects = try context.fetch(fetchRequest)
+                    
+                    for object in objects {
+                        context.delete(object)
+                    }
+                }
+                try context.save()
+            } catch let err {
+                print(err)
+            }
+        }
+    }
+    
+    private func setupData() {
+        
+        clearData()
+        
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        
+        if let context = delegate?.persistentContainer.viewContext {
+            let mark = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            mark.name = "Mark Zukerberg"
+            mark.profileImageName = "zurkerberg"
+            
+            let messageMark = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+            messageMark.friend = mark
+            messageMark.text = "Hello, my name is Mark. Nice to meet you..."
+            messageMark.date = Date() as NSDate
+            
+            let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            steve.name = "Steve job"
+            steve.profileImageName = "stevejob"
+            
+            let messageSteve = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+            messageSteve.friend = steve
+            messageSteve.text = "Apple creates great IOS for the world..."
+            messageSteve.date = Date() as NSDate
+            
+            do {
+                try context.save()
+            } catch let err {
+                print(err)
+            }
+        }
+        
+        loadData()
+    }
+    
+    private func loadData() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        if let context = delegate?.persistentContainer.viewContext {
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Message")
+            
+            do {
+                messages = try context.fetch(fetchRequest) as? [Message]
+            } catch let err {
+                print(err)
+            }
+        }
+    }
+    // ep2 9:28
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -21,25 +93,31 @@ class ViewController: UIViewController {
         collectionView.delegate = self
         return collectionView
     }()
-    // ep1: 8:30
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"
-        
+
         view.addSubview(collectionView)
-        collectionView.register(FriendCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(MessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .zero)
+        
+        setupData()
     }
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        if let count = messages?.count {
+            return count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MessageCell
+        cell.message = messages?[indexPath.item]
         return cell
     }
     
@@ -48,9 +126,28 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     }
 }
 
-class FriendCell: BaseCell {
+class MessageCell: BaseCell {
     
-    let profileImage: UIImageView = {
+    var message: Message? {
+        didSet {
+            if let name = message?.friend?.name,
+               let profileImage = message?.friend?.profileImageName,
+               let messageText = message?.text,
+               let date = message?.date {
+                
+                nameLabel.text = name
+                profileImageView.image = UIImage(named: profileImage)
+                hasRedImageView.image = UIImage(named: profileImage)
+                messageLabel.text = messageText
+                
+                let dateFormater = DateFormatter()
+                dateFormater.dateFormat = "hh:mm a"
+                timeLabel.text = dateFormater.string(from: date as Date)
+            }
+        }
+    }
+    
+    let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = #imageLiteral(resourceName: "zurkerberg")
         iv.contentMode = .scaleAspectFill
@@ -103,13 +200,13 @@ class FriendCell: BaseCell {
     }()
     
     override func setupViews() {
-        addSubview(profileImage)
+        addSubview(profileImageView)
         addSubview(dividerLineView)
         setupContainerView()
         
-        profileImage.anchor(top: nil, leading: centerXAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 68, height: 68))
-        profileImage.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        profileImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
+        profileImageView.anchor(top: nil, leading: centerXAnchor, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 68, height: 68))
+        profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
         
         dividerLineView.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 82, bottom: 0, right: 0), size: .init(width: 0, height: 1))
     }
@@ -121,7 +218,7 @@ class FriendCell: BaseCell {
         containView.addSubview(timeLabel)
         containView.addSubview(hasRedImageView)
         
-        containView.anchor(top: profileImage.topAnchor, leading: profileImage.trailingAnchor, bottom: profileImage.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 5, bottom: 0, right: 0), size: .init(width: 0, height: 0))
+        containView.anchor(top: profileImageView.topAnchor, leading: profileImageView.trailingAnchor, bottom: profileImageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 5, bottom: 0, right: 0), size: .init(width: 0, height: 0))
         
         nameLabel.anchor(top: containView.topAnchor, leading: containView.leadingAnchor, bottom: nil, trailing: timeLabel.leadingAnchor, padding: .init(top: 4, left: 4, bottom: 0, right: 0), size: .init(width: 0, height: 20))
         
