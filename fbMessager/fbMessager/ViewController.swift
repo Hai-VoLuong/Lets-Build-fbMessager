@@ -109,7 +109,9 @@ class ViewController: UIViewController {
                     }
                 }
                 
-                
+                // ep3: 15:55
+                // sort message giảm dần theo thời gian
+                messages = messages?.sorted(by: {$0.date!.compare($1.date! as Date)  == .orderedDescending })
             }
         }
     }
