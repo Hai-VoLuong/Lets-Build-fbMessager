@@ -45,6 +45,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04122E49206869FF005AB5B9 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */,
+				04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */,
+				04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */,
+				04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		049DFDA9205ACEDB00C6DF73 = {
 			isa = PBXGroup;
 			children = (
@@ -64,10 +75,7 @@
 		049DFDB4205ACEDB00C6DF73 /* fbMessager */ = {
 			isa = PBXGroup;
 			children = (
-				04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */,
-				04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */,
-				04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */,
-				04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */,
+				04122E49206869FF005AB5B9 /* model */,
 				049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */,
 				049DFDB7205ACEDB00C6DF73 /* ViewController.swift */,
 				049DFDBF205ACEDB00C6DF73 /* Assets.xcassets */,
