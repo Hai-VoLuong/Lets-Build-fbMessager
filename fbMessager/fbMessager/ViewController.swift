@@ -53,14 +53,13 @@ class ViewController: UIViewController {
             messageMark.date = Date() as NSDate
             
             let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
-            steve.name = "Steve job"
+            steve.name = "Steve jobs"
             steve.profileImageName = "stevejob"
             
-            let messageSteve = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
-            messageSteve.friend = steve
-            messageSteve.text = "Apple creates great IOS for the world..."
-            messageSteve.date = Date() as NSDate
-            
+            createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
+            createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
+            createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
+        
             do {
                 try context.save()
             } catch let err {
@@ -69,6 +68,14 @@ class ViewController: UIViewController {
         }
         
         loadData()
+    }
+    
+    private func createMessageWithText(text: String, friend: Friend, minutesAgo: Double,context: NSManagedObjectContext) {
+        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+        message.friend = friend
+        message.text = text
+        // mỗi khi tạo ra thì thời gian trừ đi 1 phút
+        message.date = Date().addingTimeInterval( -minutesAgo * 60) as NSDate
     }
     
     private func loadData() {
