@@ -11,6 +11,7 @@
 		04122E442067A971005AB5B9 /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */; };
 		04122E452067A971005AB5B9 /* Friend+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */; };
 		04122E462067A971005AB5B9 /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */; };
+		04122E4B20686A51005AB5B9 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04122E4A20686A51005AB5B9 /* ChatLogController.swift */; };
 		049DFDB6205ACEDB00C6DF73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */; };
 		049DFDB8205ACEDB00C6DF73 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDB7205ACEDB00C6DF73 /* ViewController.swift */; };
 		049DFDBE205ACEDB00C6DF73 /* fbMessager.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 049DFDBC205ACEDB00C6DF73 /* fbMessager.xcdatamodeld */; };
@@ -24,6 +25,7 @@
 		04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataClass.swift"; sourceTree = "<group>"; };
 		04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		04122E4A20686A51005AB5B9 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		049DFDB2205ACEDB00C6DF73 /* fbMessager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fbMessager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		049DFDB7205ACEDB00C6DF73 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +47,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04122E49206869FF005AB5B9 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */,
+				04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */,
+				04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */,
+				04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		049DFDA9205ACEDB00C6DF73 = {
 			isa = PBXGroup;
 			children = (
@@ -64,10 +77,7 @@
 		049DFDB4205ACEDB00C6DF73 /* fbMessager */ = {
 			isa = PBXGroup;
 			children = (
-				04122E3F2067A971005AB5B9 /* Message+CoreDataClass.swift */,
-				04122E402067A971005AB5B9 /* Message+CoreDataProperties.swift */,
-				04122E412067A971005AB5B9 /* Friend+CoreDataClass.swift */,
-				04122E422067A971005AB5B9 /* Friend+CoreDataProperties.swift */,
+				04122E49206869FF005AB5B9 /* model */,
 				049DFDB5205ACEDB00C6DF73 /* AppDelegate.swift */,
 				049DFDB7205ACEDB00C6DF73 /* ViewController.swift */,
 				049DFDBF205ACEDB00C6DF73 /* Assets.xcassets */,
@@ -75,6 +85,7 @@
 				049DFDC4205ACEDB00C6DF73 /* Info.plist */,
 				049DFDBC205ACEDB00C6DF73 /* fbMessager.xcdatamodeld */,
 				049DFDCA205B3A3E00C6DF73 /* UIViews+Extensions.swift */,
+				04122E4A20686A51005AB5B9 /* ChatLogController.swift */,
 			);
 			path = fbMessager;
 			sourceTree = "<group>";
@@ -150,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04122E4B20686A51005AB5B9 /* ChatLogController.swift in Sources */,
 				049DFDB8205ACEDB00C6DF73 /* ViewController.swift in Sources */,
 				049DFDB6205ACEDB00C6DF73 /* AppDelegate.swift in Sources */,
 				04122E442067A971005AB5B9 /* Message+CoreDataProperties.swift in Sources */,

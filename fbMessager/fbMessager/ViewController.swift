@@ -53,14 +53,21 @@ class ViewController: UIViewController {
             messageMark.date = Date() as NSDate
             
             let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
-            steve.name = "Steve job"
+            steve.name = "Steve jobs"
             steve.profileImageName = "stevejob"
             
-            let messageSteve = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
-            messageSteve.friend = steve
-            messageSteve.text = "Apple creates great IOS for the world..."
-            messageSteve.date = Date() as NSDate
+            createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
+            createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
+            createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
             
+            
+            let donal = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            donal.name = "Donald Trump"
+            donal.profileImageName = "donaldTrump"
+            
+            createMessageWithText(text: "You're fined...", friend: donal, minutesAgo: 5, context: context)
+            
+        
             do {
                 try context.save()
             } catch let err {
@@ -71,17 +78,54 @@ class ViewController: UIViewController {
         loadData()
     }
     
+    private func createMessageWithText(text: String, friend: Friend, minutesAgo: Double,context: NSManagedObjectContext) {
+        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+        message.friend = friend
+        message.text = text
+        // mỗi khi tạo ra thì thời gian trừ đi 1 phút
+        message.date = Date().addingTimeInterval( -minutesAgo * 60) as NSDate
+    }
+    
     private func loadData() {
         let delegate = UIApplication.shared.delegate as? AppDelegate
         if let context = delegate?.persistentContainer.viewContext {
-            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Message")
-            
+            if let friends = fetchFriends() {
+                
+                messages = [Message]()
+                
+                for friend in friends {
+                    
+                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Message")
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+                    fetchRequest.predicate = NSPredicate(format: "friend.name = %@", friend.name!)
+                    fetchRequest.fetchLimit = 1
+                    
+                    do {
+                        if let fetchedMessages = try context.fetch(fetchRequest) as? [Message] {
+                           messages?.append(contentsOf: fetchedMessages)
+                        }
+                    } catch let err {
+                        print(err)
+                    }
+                }
+                
+                // sort message giảm dần theo thời gian
+                messages = messages?.sorted(by: {$0.date!.compare($1.date! as Date)  == .orderedDescending })
+            }
+        }
+    }
+    
+    private func fetchFriends() -> [Friend]? {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        if let context = delegate?.persistentContainer.viewContext {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Friend")
             do {
-                messages = try context.fetch(fetchRequest) as? [Message]
+                return try context.fetch(request) as? [Friend]
             } catch let err {
                 print(err)
             }
         }
+        return nil
     }
     // ep2 9:28
     lazy var collectionView: UICollectionView = {
@@ -123,6 +167,13 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let layout = UICollectionViewFlowLayout()
+        let controller = ChatLogController(collectionViewLayout: layout)
+        controller.friend = messages?[indexPath.item].friend
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
