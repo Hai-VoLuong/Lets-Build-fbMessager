@@ -109,7 +109,6 @@ class ViewController: UIViewController {
                     }
                 }
                 
-                // ep3: 15:55
                 // sort message giảm dần theo thời gian
                 messages = messages?.sorted(by: {$0.date!.compare($1.date! as Date)  == .orderedDescending })
             }
@@ -168,6 +167,13 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let layout = UICollectionViewFlowLayout()
+        let controller = ChatLogController(collectionViewLayout: layout)
+        controller.friend = messages?[indexPath.item].friend
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
