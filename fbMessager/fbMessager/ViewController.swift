@@ -60,12 +60,23 @@ class ViewController: UIViewController {
             createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
             createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
             
-
             let donal = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             donal.name = "Donald Trump"
             donal.profileImageName = "donaldTrump"
             
             createMessageWithText(text: "You're fined...", friend: donal, minutesAgo: 5, context: context)
+            
+            let gandhi = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            gandhi.name = "Mahatma Gandhi"
+            gandhi.profileImageName = "mahatma"
+            
+            createMessageWithText(text: "Love, Peace, and Joy...", friend: gandhi, minutesAgo: 60 * 24, context: context)
+            
+            let hillary = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            hillary.name = "Hillary"
+            hillary.profileImageName = "hillaryClinton"
+            
+            createMessageWithText(text: "Please vote for me. you did for bily", friend: hillary, minutesAgo: 8 * 60 * 24, context: context)
             
         
             do {
@@ -202,6 +213,16 @@ class MessageCell: BaseCell {
                 
                 let dateFormater = DateFormatter()
                 dateFormater.dateFormat = "hh:mm a"
+                
+                let elapsedTimeInSeconds = NSDate().timeIntervalSince(date as Date)
+                let secondInDays: TimeInterval = 60 * 60 * 24
+                
+                if elapsedTimeInSeconds > 7 * secondInDays {
+                    dateFormater.dateFormat = "MM/dd/yy"
+                } else if elapsedTimeInSeconds > secondInDays {
+                    dateFormater.dateFormat = "EEE"
+                }
+                
                 timeLabel.text = dateFormater.string(from: date as Date)
             }
         }
