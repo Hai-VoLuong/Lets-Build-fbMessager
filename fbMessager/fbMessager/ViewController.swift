@@ -57,7 +57,8 @@ class ViewController: UIViewController {
             steve.profileImageName = "stevejob"
             
             createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
-            createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
+            // ep5: 3:50
+            createMessageWithText(text: "Hello how are you?... Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device ", friend: steve, minutesAgo: 1, context: context)
             createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
             
             let donal = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
