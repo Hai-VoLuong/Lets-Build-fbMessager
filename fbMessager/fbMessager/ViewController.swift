@@ -60,7 +60,7 @@ class ViewController: UIViewController {
             createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
             createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
             
-            
+
             let donal = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             donal.name = "Donald Trump"
             donal.profileImageName = "donaldTrump"
@@ -178,6 +178,15 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
 }
 
 class MessageCell: BaseCell {
+    
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? UIColor(red: 0, green: 134/255, blue: 249/255, alpha: 1) : UIColor.white
+            nameLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            timeLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            messageLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+        }
+    }
     
     var message: Message? {
         didSet {
