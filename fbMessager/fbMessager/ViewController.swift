@@ -127,7 +127,7 @@ class ViewController: UIViewController {
         }
         return nil
     }
-    // ep2 9:28
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
