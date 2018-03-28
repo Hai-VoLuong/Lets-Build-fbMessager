@@ -163,6 +163,11 @@ class ViewController: UIViewController {
         return collectionView
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"

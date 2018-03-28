@@ -21,10 +21,33 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     var messages: [Message]?
     
+    let messageInputContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .lightGray
+        return view
+    }()
+    
+    let inputTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Enter message..."
+        return tf
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarController?.tabBar.isHidden = true
         collectionView?.backgroundColor = .white
         collectionView?.register(ChatLogMessageCell.self, forCellWithReuseIdentifier: cellId)
+        
+        view.addSubview(messageInputContainerView)
+        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .init(width: 0, height: 50))
+        
+        setupInputComponents()
+    }
+    
+    private func setupInputComponents() {
+        messageInputContainerView.addSubview(inputTextField)
+        inputTextField.anchor(top: messageInputContainerView.topAnchor, leading: messageInputContainerView.leadingAnchor, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .zero)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
