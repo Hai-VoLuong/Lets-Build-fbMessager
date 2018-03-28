@@ -90,11 +90,15 @@ class ViewController: UIViewController {
         
         createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
         
-        createMessageWithText(text: "Hello how are you?... Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an Apple device ", friend: steve, minutesAgo: 1, context: context)
+        createMessageWithText(text: "Hello how are you?... Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying", friend: steve, minutesAgo: 1, context: context)
         createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
         
         // response
         createMessageWithText(text: "Yes, totally looking to buy an iphone 7", friend: steve, minutesAgo: 0, context: context, isSender: true)
+        
+        createMessageWithText(text: "Totally understand that you want Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an ", friend: steve, minutesAgo: 0, context: context)
+        
+        createMessageWithText(text: "Absolutly, I'll just use my iphone 6 plus until them", friend: steve, minutesAgo: 0, context: context, isSender: true)
         
     }
     
