@@ -52,13 +52,7 @@ class ViewController: UIViewController {
             messageMark.text = "Hello, my name is Mark. Nice to meet you..."
             messageMark.date = Date() as NSDate
             
-            let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
-            steve.name = "Steve jobs"
-            steve.profileImageName = "stevejob"
-            
-            createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
-            createMessageWithText(text: "Hello how are you?...", friend: steve, minutesAgo: 1, context: context)
-            createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
+            createSteveMessagesWithContext(context: context)
             
             let donal = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             donal.name = "Donald Trump"
@@ -89,12 +83,32 @@ class ViewController: UIViewController {
         loadData()
     }
     
-    private func createMessageWithText(text: String, friend: Friend, minutesAgo: Double,context: NSManagedObjectContext) {
+    private func createSteveMessagesWithContext(context: NSManagedObjectContext) {
+        let steve = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+        steve.name = "Steve jobs"
+        steve.profileImageName = "stevejob"
+        
+        createMessageWithText(text: "Good morning...", friend: steve, minutesAgo: 2, context: context)
+        
+        createMessageWithText(text: "Hello how are you?... Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying", friend: steve, minutesAgo: 1, context: context)
+        createMessageWithText(text: "Are you interested in buying an Apple device?..", friend: steve, minutesAgo: 0, context: context)
+        
+        // response
+        createMessageWithText(text: "Yes, totally looking to buy an iphone 7", friend: steve, minutesAgo: 0, context: context, isSender: true)
+        
+        createMessageWithText(text: "Totally understand that you want Are you interested in buying an Apple device Are you interested in buying an Apple device Are you interested in buying an ", friend: steve, minutesAgo: 0, context: context)
+        
+        createMessageWithText(text: "Absolutly, I'll just use my iphone 6 plus until them", friend: steve, minutesAgo: 0, context: context, isSender: true)
+        
+    }
+    
+    private func createMessageWithText(text: String, friend: Friend, minutesAgo: Double,context: NSManagedObjectContext, isSender: Bool = false) {
         let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
         message.friend = friend
         message.text = text
         // mỗi khi tạo ra thì thời gian trừ đi 1 phút
         message.date = Date().addingTimeInterval( -minutesAgo * 60) as NSDate
+        message.isSender = isSender
     }
     
     private func loadData() {
