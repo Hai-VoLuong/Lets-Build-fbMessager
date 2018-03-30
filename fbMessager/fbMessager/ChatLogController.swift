@@ -20,10 +20,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     var messages: [Message]?
+    var messageBottomAnchor: NSLayoutConstraint?
     
     let messageInputContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .red
         return view
     }()
     
@@ -40,9 +41,27 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         collectionView?.register(ChatLogMessageCell.self, forCellWithReuseIdentifier: cellId)
         
         view.addSubview(messageInputContainerView)
-        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero, size: .init(width: 0, height: 50))
+        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        
+//        messageBottomAnchor = messageInputContainerView.anchorWithReturnAnchors(nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 50).first
         
         setupInputComponents()
+        // ep7: 14: 37
+        NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillShow, object: nil)
+    }
+    
+    @objc private func handlerKeyboardNotification(notification: NSNotification) {
+        print("keyboard will show")
+        if let useInfo = notification.userInfo {
+            let keyboardFrame = (useInfo[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                if let frameKeyboardHight = keyboardFrame?.height {
+                    let y: CGFloat = UIDevice.current.orientation.isPortrait ? -frameKeyboardHight : -frameKeyboardHight
+                    self.view.frame = CGRect(x: 0, y: y, width: self.view.frame.width, height: self.view.frame.height)
+                }
+            }, completion: nil)
+        }
     }
     
     private func setupInputComponents() {
