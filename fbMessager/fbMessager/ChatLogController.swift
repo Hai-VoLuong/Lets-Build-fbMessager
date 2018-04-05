@@ -23,7 +23,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     let messageInputContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
+        view.backgroundColor = .white
         return view
     }()
     
@@ -54,19 +54,28 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         setupInputComponents()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillHide, object: nil)
     }
     
     @objc private func handlerKeyboardNotification(notification: NSNotification) {
         print("keyboard will show")
         if let useInfo = notification.userInfo {
             let keyboardFrame = (useInfo[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
-            bottomConstraint?.constant = -(keyboardFrame?.height as! CGFloat)
+            let isKeyboardShowing = notification.name == NSNotification.Name.UIKeyboardWillShow
+            bottomConstraint?.constant = isKeyboardShowing ? -(keyboardFrame?.height as! CGFloat) : 0
+            UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
         }
     }
     
     private func setupInputComponents() {
         messageInputContainerView.addSubview(inputTextField)
         inputTextField.anchor(top: messageInputContainerView.topAnchor, leading: messageInputContainerView.leadingAnchor, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .zero)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        inputTextField.endEditing(true)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
