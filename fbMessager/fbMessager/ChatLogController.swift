@@ -20,7 +20,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     var messages: [Message]?
-    var messageBottomAnchor: NSLayoutConstraint?
     
     let messageInputContainerView: UIView = {
         let view = UIView()
@@ -34,6 +33,9 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return tf
     }()
     
+    var bottomConstraint: NSLayoutConstraint?
+    //  var messageBottomAnchor: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBarController?.tabBar.isHidden = true
@@ -41,12 +43,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         collectionView?.register(ChatLogMessageCell.self, forCellWithReuseIdentifier: cellId)
         
         view.addSubview(messageInputContainerView)
-        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
         
-//        messageBottomAnchor = messageInputContainerView.anchorWithReturnAnchors(nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 50).first
+        //         messageBottomAnchor = messageInputContainerView.anchorWithReturnAnchors(nil, left: nil, bottom: view.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0).first
+        //
+        bottomConstraint = NSLayoutConstraint(item: messageInputContainerView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        
+        view.addConstraint(bottomConstraint!)
         
         setupInputComponents()
-        // ep7: 14: 37
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillShow, object: nil)
     }
     
@@ -54,13 +60,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         print("keyboard will show")
         if let useInfo = notification.userInfo {
             let keyboardFrame = (useInfo[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                if let frameKeyboardHight = keyboardFrame?.height {
-                    let y: CGFloat = UIDevice.current.orientation.isPortrait ? -frameKeyboardHight : -frameKeyboardHight
-                    self.view.frame = CGRect(x: 0, y: y, width: self.view.frame.width, height: self.view.frame.height)
-                }
-            }, completion: nil)
+            bottomConstraint?.constant = -(keyboardFrame?.height as! CGFloat)
         }
     }
     
@@ -90,7 +90,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             if !message.isSender {
                 cell.messageTextView.frame = CGRect(x: 48 + 8, y: 0, width: estimatedFrame.width + 16, height: estimatedFrame.height + 20)
-
+                
                 cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: estimatedFrame.width + 16 + 8, height: estimatedFrame.height + 20)
                 
                 cell.textBubbleView.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -98,7 +98,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 cell.messageTextView.textColor = .black
             } else {
                 cell.messageTextView.frame = CGRect(x: view.frame.width - estimatedFrame.width - 16 - 16, y: 0, width: estimatedFrame.width + 16, height: estimatedFrame.height + 20)
-
+                
                 cell.textBubbleView.frame = CGRect(x: view.frame.width - estimatedFrame.width - 16 - 16 - 8, y: 0, width: estimatedFrame.width + 16 + 8, height: estimatedFrame.height + 20)
                 
                 cell.textBubbleView.backgroundColor = UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1)
