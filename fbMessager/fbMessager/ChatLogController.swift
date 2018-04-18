@@ -21,10 +21,86 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     var messages: [Message]?
     
+    let messageInputContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let inputTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Enter message..."
+        return tf
+    }()
+    
+    let sendButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Send", for: .normal)
+        button.setTitleColor(UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1), for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        return button
+    }()
+    
+    var bottomConstraint: NSLayoutConstraint?
+    //  var messageBottomAnchor: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarController?.tabBar.isHidden = true
         collectionView?.backgroundColor = .white
         collectionView?.register(ChatLogMessageCell.self, forCellWithReuseIdentifier: cellId)
+        
+        view.addSubview(messageInputContainerView)
+        messageInputContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        
+        //         messageBottomAnchor = messageInputContainerView.anchorWithReturnAnchors(nil, left: nil, bottom: view.bottomAnchor, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0).first
+        //
+        bottomConstraint = NSLayoutConstraint(item: messageInputContainerView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        
+        view.addConstraint(bottomConstraint!)
+        
+        setupInputComponents()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlerKeyboardNotification), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc private func handlerKeyboardNotification(notification: NSNotification) {
+        print("keyboard will show")
+        if let useInfo = notification.userInfo {
+            let keyboardFrame = (useInfo[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
+            let isKeyboardShowing = notification.name == NSNotification.Name.UIKeyboardWillShow
+            bottomConstraint?.constant = isKeyboardShowing ? -(keyboardFrame?.height as! CGFloat) : 0
+            UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { (compteted) in
+                if isKeyboardShowing {
+                    let indexPath = IndexPath(item: (self.messages?.count)! - 1, section: 0)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                }
+            })
+        }
+    }
+    
+    private func setupInputComponents() {
+        let topBorderView = UIView()
+        topBorderView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        
+        messageInputContainerView.addSubview(topBorderView)
+        messageInputContainerView.addSubview(inputTextField)
+        messageInputContainerView.addSubview(sendButton)
+        
+        topBorderView.anchor(top: messageInputContainerView.topAnchor, leading: messageInputContainerView.leadingAnchor, bottom: nil, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 8), size: .init(width: 0, height: 0.5))
+        
+        inputTextField.anchor(top: topBorderView.bottomAnchor, leading: messageInputContainerView.leadingAnchor, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .zero)
+
+        sendButton.anchor(top: topBorderView.bottomAnchor, leading: nil, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 8), size: .init(width: 50, height: 0))
+        
+        
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        inputTextField.endEditing(true)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -48,7 +124,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             
             if !message.isSender {
                 cell.messageTextView.frame = CGRect(x: 48 + 8, y: 0, width: estimatedFrame.width + 16, height: estimatedFrame.height + 20)
-
+                
                 cell.textBubbleView.frame = CGRect(x: 48, y: 0, width: estimatedFrame.width + 16 + 8, height: estimatedFrame.height + 20)
                 
                 cell.textBubbleView.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -56,7 +132,7 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 cell.messageTextView.textColor = .black
             } else {
                 cell.messageTextView.frame = CGRect(x: view.frame.width - estimatedFrame.width - 16 - 16, y: 0, width: estimatedFrame.width + 16, height: estimatedFrame.height + 20)
-
+                
                 cell.textBubbleView.frame = CGRect(x: view.frame.width - estimatedFrame.width - 16 - 16 - 8, y: 0, width: estimatedFrame.width + 16 + 8, height: estimatedFrame.height + 20)
                 
                 cell.textBubbleView.backgroundColor = UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1)
