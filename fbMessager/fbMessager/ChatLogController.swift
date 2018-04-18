@@ -33,6 +33,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return tf
     }()
     
+    let sendButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Send", for: .normal)
+        button.setTitleColor(UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1), for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        return button
+    }()
+    
     var bottomConstraint: NSLayoutConstraint?
     //  var messageBottomAnchor: NSLayoutConstraint?
     
@@ -65,13 +73,30 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
             bottomConstraint?.constant = isKeyboardShowing ? -(keyboardFrame?.height as! CGFloat) : 0
             UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
                 self.view.layoutIfNeeded()
-            }, completion: nil)
+            }, completion: { (compteted) in
+                if isKeyboardShowing {
+                    let indexPath = IndexPath(item: (self.messages?.count)! - 1, section: 0)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                }
+            })
         }
     }
     
     private func setupInputComponents() {
+        let topBorderView = UIView()
+        topBorderView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        
+        messageInputContainerView.addSubview(topBorderView)
         messageInputContainerView.addSubview(inputTextField)
-        inputTextField.anchor(top: messageInputContainerView.topAnchor, leading: messageInputContainerView.leadingAnchor, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .zero)
+        messageInputContainerView.addSubview(sendButton)
+        
+        topBorderView.anchor(top: messageInputContainerView.topAnchor, leading: messageInputContainerView.leadingAnchor, bottom: nil, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 8), size: .init(width: 0, height: 0.5))
+        
+        inputTextField.anchor(top: topBorderView.bottomAnchor, leading: messageInputContainerView.leadingAnchor, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .zero)
+
+        sendButton.anchor(top: topBorderView.bottomAnchor, leading: nil, bottom: messageInputContainerView.bottomAnchor, trailing: messageInputContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 8), size: .init(width: 50, height: 0))
+        
+        
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
